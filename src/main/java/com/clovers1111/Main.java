@@ -31,7 +31,8 @@ public class Main {
         for (int i = 0; i < pathToPdfDirWithPdf.length - 1; i++){
             pathToPdfDir += pathToPdfDirWithPdf[i] + "/";
         }
-        final String tempFileDir = pathToPdfDir + "temp/";
+        DataManager.pathToPdfDir = pathToPdfDir;
+        DataManager.tempFileDir = pathToPdfDir + "temp/";
 
         PDDocument pdfFile = Loader.loadPDF(new File(pdfString));
 
@@ -46,30 +47,29 @@ public class Main {
         * Instantiate fileWrapper objects with images of each page of the imported PDF file.
         */
 
-        List<FileWrapper> fileWrappers = new ArrayList<>();
+        LinkedFileHandler fileWrapperHandler = new LinkedFileHandler();
 
         int count = 1;
         while(pdfIterator.hasNext()){
             PDFRenderer pdfRenderer = new PDFRenderer(pdfIterator.next());
             BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);  // Creates a buffered image for later saving;
-            String tempImgName = tempFileDir + "temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
+            String tempImgName = DataManager.tempFileDir + "temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
             File tempImgFile = new File(tempImgName);                                                // and a file object to store
             tempImgFile.createNewFile();
             ImageIO.write(bim, "JPG", tempImgFile);                                       // Saves object
 
 
-            FileWrapper fileWrapper = new FileWrapper(tempImgFile);                //  fileWrapper obj. created; contains prev. file
-            fileWrappers.add(fileWrapper);                                         //  assimilates fileWrapper into list
+            fileWrapperHandler.add(new FileWrapper(tempImgFile));                //  fileWrapper obj. created; contains prev. file
         }
 
 
         // Now we need to ascertain where to find the page number in the photos
 
+        fileWrapperHandler.setSelections();
+        System.out.println("test");
 
-        for (FileWrapper fileWrapper : fileWrappers){
 
 
-        }
 
 
 
