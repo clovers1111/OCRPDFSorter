@@ -16,6 +16,9 @@ public class ImageSelector extends JPanel {
     private int selectionY;
     private int selectionWidth;
     private int selectionHeight;
+    private SelectionListener listener;
+
+
 
     // Temporary variables for the mouse drag logic
     private Point startPoint;
@@ -65,6 +68,19 @@ public class ImageSelector extends JPanel {
 
     // Calculates the final top-left x/y and width/height
     // Handles dragging in any direction (e.g., bottom-right to top-left)
+
+    public void setSelectionListener(SelectionListener listener){
+        this.listener = listener;
+    }
+
+
+
+    private void notifySelection(Rectangle r) {
+        if (listener != null) {
+            listener.selectionChanged(r);
+        }
+    }
+
     private void calculateSelection() {
         int x1 = startPoint.x;
         int y1 = startPoint.y;
@@ -75,8 +91,10 @@ public class ImageSelector extends JPanel {
         selectionY = Math.min(y1, y2);
         selectionWidth = Math.abs(x1 - x2);
         selectionHeight = Math.abs(y1 - y2);
-        // Save selection to a file after it has been calculated
 
+        //Notify our listener that a new selection has been made and save
+        // it to our list of selections as rectangle objects
+        notifySelection(new Rectangle(selectionX, selectionY, selectionWidth, selectionHeight));
     }
 
     @Override

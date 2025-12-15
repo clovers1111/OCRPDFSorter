@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkedFileHandler {
-    private File selectio;
     private List<FileWrapper> fileWrappers;
     private List<Rectangle> selections;
     private String tempFileDir;
@@ -26,19 +25,28 @@ public class LinkedFileHandler {
         return fileWrappers.get(randInt).getPdfImgFile();
     }
 
+    public List<FileWrapper> getFileWrappers(){
+        return this.fileWrappers;
+    }
+
 
     //Data needs to be saved to a file each time this is complete to pass info from ImageSelector
     // back to this class.
     public void setSelections(){
 
-            File image = getRandomImgFile();
+            File imageFile = getRandomImgFile();
 
 
+
+            // Creates new JFrame object based on random file on previous line.
             SwingUtilities.invokeLater(() -> {
                 JFrame frame = new JFrame("Image Region Selector");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                ImageSelector selector = new ImageSelector(image);
+                ImageSelector selector = new ImageSelector(imageFile);
+
+                // Our listener will pass through the rectangle objects from ImageSelector to our present class
+                selector.setSelectionListener(this::addSelections);
 
                 JScrollPane scrollPane = new JScrollPane(selector);
                 frame.add(scrollPane);
@@ -46,18 +54,32 @@ public class LinkedFileHandler {
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
+
             });
 
-    }
-
-
-    private void setSelectionDocument(){
 
     }
 
-    private void populateSelectionDocument(){
+    public void applyAttributesToFileWrappers(){
 
     }
+
+    private void addSelections(Rectangle rectangle) {
+        this.selections.add(rectangle);
+    }
+
+    //mem leak?
+    public void clearSelections(){
+        this.selections = new ArrayList<>();
+    }
+
+    public List<Rectangle> getSelections(){
+        return this.selections;
+    }
+
+
+
+    /*
     private void setDirectoryLocation(){
         String[] splitDir = fileWrappers.get(0).getPdfImgFile().getAbsolutePath().split("/");
         for (int i = 0; i < splitDir.length - 1; i++){  //creates </path/to/temp/dir>
@@ -65,4 +87,5 @@ public class LinkedFileHandler {
         }
         this.tempFileDir += tempFileDir + "/";          //creates </path/to/temp/dir/>
     }
+     */
 }

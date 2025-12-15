@@ -6,10 +6,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -31,6 +33,8 @@ public class Main {
         for (int i = 0; i < pathToPdfDirWithPdf.length - 1; i++){
             pathToPdfDir += pathToPdfDirWithPdf[i] + "/";
         }
+
+        //Needs to be changed eventually
         DataManager.pathToPdfDir = pathToPdfDir;
         DataManager.tempFileDir = pathToPdfDir + "temp/";
 
@@ -52,21 +56,46 @@ public class Main {
         int count = 1;
         while(pdfIterator.hasNext()){
             PDFRenderer pdfRenderer = new PDFRenderer(pdfIterator.next());
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);  // Creates a buffered image for later saving;
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);              // Creates a buffered image for later saving;
             String tempImgName = DataManager.tempFileDir + "temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
-            File tempImgFile = new File(tempImgName);                                                // and a file object to store
+            File tempImgFile = new File(tempImgName);                                                            // and a file object to store
             tempImgFile.createNewFile();
-            ImageIO.write(bim, "JPG", tempImgFile);                                       // Saves object
+            ImageIO.write(bim, "JPG", tempImgFile);                                                     // Writes data to blank file
 
 
             fileWrapperHandler.add(new FileWrapper(tempImgFile));                //  fileWrapper obj. created; contains prev. file
         }
 
-
+        System.out.println("Successfully processed " + fileWrapperHandler.getFileWrappers().size() + " pages.");
+        System.out.println("Starting page number selection process . . . ");
+        System.out.println("Highlight the page number and then exit the page.");
         // Now we need to ascertain where to find the page number in the photos
+        do{
+            fileWrapperHandler.setSelections();
+            System.out.println("Are you finished selecting? (y/n): ");
+            if (scanner.nextLine().equals("n"))
+                continue;
+            else {
 
-        fileWrapperHandler.setSelections();
-        System.out.println("test");
+                System.out.print("Your selections: ");
+                for (Rectangle rectangle : fileWrapperHandler.getSelections()){
+                    System.out.print(rectangle + ", ");
+                }
+
+                System.out.println("\nRetry? (y/n): ");
+                if (scanner.nextLine().equals("y")){
+                    fileWrapperHandler.clearSelections();
+                }
+                else {
+                    break;
+                }
+
+            }
+
+        }while(true);
+
+
+
 
 
 
