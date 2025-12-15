@@ -1,10 +1,13 @@
 package com.clovers1111;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LinkedFileHandler {
     private List<FileWrapper> fileWrappers;
@@ -60,7 +63,35 @@ public class LinkedFileHandler {
 
     }
 
-    public void applyAttributesToFileWrappers(){
+    public void applyAttributesToFileWrappers() throws Exception {
+
+        OcrParserTesseractService ocrParser = new OcrParserTesseractService();
+
+        for (FileWrapper fileWrapper : fileWrappers) {
+            //Convert the file to a buffered image
+            BufferedImage tempBim = ImageIO.read(fileWrapper.getPdfImgFile());
+            for (Rectangle rectangle : selections) {       // We'll crop the image and iterate through the user's selections
+                String tempOcrText = ocrParser.parse(
+                        tempBim.getSubimage(               // Image crop
+                            rectangle.x,
+                            rectangle.y,
+                            rectangle.width,
+                            rectangle.height)
+                        ).chars()                                   // Stream the input
+                        .filter(c -> Character.isDigit(c))      // and throw away non-digits
+                        .mapToObj(c -> String.valueOf((char) c ))
+                        .collect(Collectors.joining()
+                        );
+                //This will never run if our OCR service never reads a number;
+                // this is intentional because the ocrInteger is init. to null
+                if (!tempOcrText.isBlank()){
+                    fileWrapper.setOcrInteger(Integer
+                            .parseInt(tempOcrText));
+                    break;
+                }
+            };
+
+        }
 
     }
 

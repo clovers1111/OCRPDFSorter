@@ -5,6 +5,7 @@ import java.io.File;
 public class FileWrapper extends PdfToImageService {
     public FileWrapper(File file){
         this.pdfImgFile = file;
+        this.ocrInteger = null;
     }
 
     public File getPdfImgFile(){
@@ -17,12 +18,12 @@ public class FileWrapper extends PdfToImageService {
         this.ocrImgFile = img;
     }
 
-    public void setOcrText(String text){
-        this.ocrText = text;
+    public void setOcrInteger(int integer){
+        this.ocrInteger = integer;
     }
 
-    public String getOcrText(){
-        return this.ocrText;
+    public int getOcrInteger(){
+        return this.ocrInteger;
     }
 
     public File getOcrImage(){
@@ -30,7 +31,7 @@ public class FileWrapper extends PdfToImageService {
     }
 
     private File pdfImgFile;
-    private String ocrText;
+    private Integer ocrInteger;
     private File ocrImgFile;
 
 }

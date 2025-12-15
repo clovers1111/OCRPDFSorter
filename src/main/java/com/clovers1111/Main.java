@@ -86,13 +86,24 @@ public class Main {
                 if (scanner.nextLine().equals("y")){
                     fileWrapperHandler.clearSelections();
                 }
-                else {
+                else {          //exit, finally
                     break;
                 }
 
             }
 
         }while(true);
+
+        /*
+        *
+        * Selections have been made and confirmed by user. Now we need to use those
+        * selections to create cropped images for our ocr service to evaluate. The
+        * evaluations are immediately saved to their respective FileWrapper object
+        * in the "ocrText" private data member.
+        *
+        */
+
+
 
 
 
