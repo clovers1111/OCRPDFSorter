@@ -1,4 +1,5 @@
 package com.clovers1111;
 
-public class PdfToImageService {
+public abstract class PdfToImageService {
+    public abstract int compareTo(FileWrapper otherWrapper);
 }

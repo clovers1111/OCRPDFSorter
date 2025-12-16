@@ -99,11 +99,19 @@ public class Main {
         * Selections have been made and confirmed by user. Now we need to use those
         * selections to create cropped images for our ocr service to evaluate. The
         * evaluations are immediately saved to their respective FileWrapper object
-        * in the "ocrText" private data member.
-        *
+        * in the "ocrInteger" private data member.
+        *  V V V V V V V V V V V V V V V V V V V
         */
+        fileWrapperHandler.applyAttributesToFileWrappers();
 
 
+        /*
+        * FileWrapper objects now have all the necessary info to commence sorting;
+        * we will use quicksort.
+        *
+         */
+
+        fileWrapperHandler.sortFileWrappers();
 
 
 

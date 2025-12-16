@@ -2,7 +2,7 @@ package com.clovers1111;
 
 import java.io.File;
 
-public class FileWrapper extends PdfToImageService {
+public class FileWrapper extends PdfToImageService implements Comparable<FileWrapper> {
     public FileWrapper(File file){
         this.pdfImgFile = file;
         this.ocrInteger = null;
@@ -12,13 +12,7 @@ public class FileWrapper extends PdfToImageService {
         return this.pdfImgFile;
     }
 
-
-
-    public void setOcrImage(File img){
-        this.ocrImgFile = img;
-    }
-
-    public void setOcrInteger(int integer){
+    public void setOcrInteger(Integer integer){
         this.ocrInteger = integer;
     }
 
@@ -26,12 +20,13 @@ public class FileWrapper extends PdfToImageService {
         return this.ocrInteger;
     }
 
-    public File getOcrImage(){
-        return this.ocrImgFile;
-    }
 
-    private File pdfImgFile;
+
+    private File pdfImgFile;    //Stored as a file rather than a buffered image for reduced memory usage!
     private Integer ocrInteger;
-    private File ocrImgFile;
 
+    @Override
+    public int compareTo(FileWrapper otherWrapper) {
+        return ocrInteger - otherWrapper.getOcrInteger();
+    }
 }

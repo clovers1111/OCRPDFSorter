@@ -13,6 +13,7 @@ public class LinkedFileHandler {
     private List<FileWrapper> fileWrappers;
     private List<Rectangle> selections;
     private String tempFileDir;
+    private List<FileWrapper> unlabledFileWrappers;
 
     public LinkedFileHandler(){
         this.fileWrappers = new ArrayList<>();
@@ -68,10 +69,15 @@ public class LinkedFileHandler {
         OcrParserTesseractService ocrParser = new OcrParserTesseractService();
 
         for (FileWrapper fileWrapper : fileWrappers) {
-            //Convert the file to a buffered image
+            //Convert the file to a buffered image - this conversion is preferred to reduce RAM usage.
             BufferedImage tempBim = ImageIO.read(fileWrapper.getPdfImgFile());
             for (Rectangle rectangle : selections) {       // We'll crop the image and iterate through the user's selections
                 String tempOcrText = ocrParser.parse(
+                        /* <--! IMPORTANT NOTE FOR LATER !-->
+                        * If you extract a small subimage from a very large
+                        * original image, the entire large image's data remains
+                        * in memory as long as the subimage reference is held.
+                         */
                         tempBim.getSubimage(               // Image crop
                             rectangle.x,
                             rectangle.y,
@@ -79,7 +85,7 @@ public class LinkedFileHandler {
                             rectangle.height)
                         ).chars()                                   // Stream the input
                         .filter(c -> Character.isDigit(c))      // and throw away non-digits
-                        .mapToObj(c -> String.valueOf((char) c ))
+                        .mapToObj(c -> String.valueOf((char) c))
                         .collect(Collectors.joining()
                         );
                 //This will never run if our OCR service never reads a number;
@@ -95,9 +101,10 @@ public class LinkedFileHandler {
 
     }
 
-    private void addSelections(Rectangle rectangle) {
-        this.selections.add(rectangle);
+    public void sortFileWrappers(){
+
     }
+
 
     //mem leak?
     public void clearSelections(){
@@ -109,6 +116,13 @@ public class LinkedFileHandler {
     }
 
 
+    private void pushUnsortedFileWrappers(){
+
+    }
+
+    private void addSelections(Rectangle rectangle) {
+        this.selections.add(rectangle);
+    }
 
     /*
     private void setDirectoryLocation(){
