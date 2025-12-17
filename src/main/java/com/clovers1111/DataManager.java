@@ -1,6 +1,9 @@
 package com.clovers1111;
 
+import java.nio.file.Path;
+
 public class DataManager {
-    public static String tempFileDir;
-    public static String pathToPdfDir;
+    public static Path tempFileDir;
+    public static Path pathToPdfDir;
+    public static Path pathToPdfFile;
 }

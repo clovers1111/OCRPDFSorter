@@ -91,8 +91,8 @@ public class LinkedFileHandler {
                 //This will never run if our OCR service never reads a number;
                 // this is intentional because the ocrInteger is init. to null
                 if (!tempOcrText.isBlank()){
-                    fileWrapper.setOcrInteger(Integer
-                            .parseInt(tempOcrText));
+                    fileWrapper.setOcrInteger(Short
+                            .parseShort(tempOcrText));
                     break;
                 }
             };
@@ -102,8 +102,18 @@ public class LinkedFileHandler {
     }
 
     public void sortFileWrappers(){
-
+        fileWrappers.sort(FileWrapper::compareTo);
     }
+
+    public void printFileWrappersAndLocation(){
+        short i = 0;
+        for (FileWrapper fileWrapper : fileWrappers){
+            System.out.println(fileWrapper + " " + i);
+            i++;
+        }
+    }
+
+
 
 
     //mem leak?
@@ -114,6 +124,11 @@ public class LinkedFileHandler {
     public List<Rectangle> getSelections(){
         return this.selections;
     }
+
+    public void printSelections(){
+
+    }
+
 
 
     private void pushUnsortedFileWrappers(){

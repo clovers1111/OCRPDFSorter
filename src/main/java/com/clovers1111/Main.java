@@ -10,9 +10,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.nio.file.Files;
 
 
 import net.sourceforge.tess4j.Tesseract;
@@ -20,25 +23,20 @@ import net.sourceforge.tess4j.TesseractException;
 
 import javax.imageio.ImageIO;
 
+//
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main( String[] args ) throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the path to the PDF file starting from root: ");
         final String pdfString = scanner.nextLine();
-        String[] pathToPdfDirWithPdf = pdfString.split("/");
-        String pathToPdfDir = "/";
-        for (int i = 0; i < pathToPdfDirWithPdf.length - 1; i++){
-            pathToPdfDir += pathToPdfDirWithPdf[i] + "/";
-        }
+        DataManager.pathToPdfFile = Paths.get(pdfString);
+        DataManager.pathToPdfDir = DataManager.pathToPdfFile.getParent();
+        DataManager.tempFileDir = (Files.createTempDirectory("pdfsort"));
 
-        //Needs to be changed eventually
-        DataManager.pathToPdfDir = pathToPdfDir;
-        DataManager.tempFileDir = pathToPdfDir + "temp/";
-
-        PDDocument pdfFile = Loader.loadPDF(new File(pdfString));
+        PDDocument pdfFile = Loader.loadPDF(new File(
+                DataManager.pathToPdfFile.toString())   // This is the absolute path incl. the PDF file
+        );
 
 
         //We'll split pdf files into their individual pages for later conversion into image files
@@ -53,11 +51,13 @@ public class Main {
 
         LinkedFileHandler fileWrapperHandler = new LinkedFileHandler();
 
+
+        // Now create all of the FileWrapper objects with their respective files
         int count = 1;
         while(pdfIterator.hasNext()){
             PDFRenderer pdfRenderer = new PDFRenderer(pdfIterator.next());
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);              // Creates a buffered image for later saving;
-            String tempImgName = DataManager.tempFileDir + "temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);              // Creates a buffered image for later saving
+            String tempImgName = DataManager.tempFileDir + "/temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
             File tempImgFile = new File(tempImgName);                                                            // and a file object to store
             tempImgFile.createNewFile();
             ImageIO.write(bim, "JPG", tempImgFile);                                                     // Writes data to blank file
@@ -100,7 +100,7 @@ public class Main {
         * selections to create cropped images for our ocr service to evaluate. The
         * evaluations are immediately saved to their respective FileWrapper object
         * in the "ocrInteger" private data member.
-        *  V V V V V V V V V V V V V V V V V V V
+        *
         */
         fileWrapperHandler.applyAttributesToFileWrappers();
 
@@ -108,10 +108,11 @@ public class Main {
         /*
         * FileWrapper objects now have all the necessary info to commence sorting;
         * we will use quicksort.
-        *
          */
-
+        fileWrapperHandler.printFileWrappersAndLocation();
         fileWrapperHandler.sortFileWrappers();
+        fileWrapperHandler.printFileWrappersAndLocation();
+
 
 
 

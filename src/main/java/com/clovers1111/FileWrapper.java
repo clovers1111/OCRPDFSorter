@@ -5,14 +5,14 @@ import java.io.File;
 public class FileWrapper extends PdfToImageService implements Comparable<FileWrapper> {
     public FileWrapper(File file){
         this.pdfImgFile = file;
-        this.ocrInteger = null;
+        this.ocrInteger = 32000;
     }
 
     public File getPdfImgFile(){
         return this.pdfImgFile;
     }
 
-    public void setOcrInteger(Integer integer){
+    public void setOcrInteger(short integer){
         this.ocrInteger = integer;
     }
 
@@ -21,12 +21,15 @@ public class FileWrapper extends PdfToImageService implements Comparable<FileWra
     }
 
 
-
     private File pdfImgFile;    //Stored as a file rather than a buffered image for reduced memory usage!
-    private Integer ocrInteger;
+    private short ocrInteger;
 
     @Override
     public int compareTo(FileWrapper otherWrapper) {
         return ocrInteger - otherWrapper.getOcrInteger();
+    }
+    @Override
+    public String toString(){
+        return pdfImgFile.getName();
     }
 }

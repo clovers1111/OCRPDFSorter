@@ -12,10 +12,10 @@ public class ImageSelector extends JPanel {
     private BufferedImage image;
 
     // Variables to store the selection coordinates
-    private int selectionX;
-    private int selectionY;
-    private int selectionWidth;
-    private int selectionHeight;
+    private short selectionX;
+    private short selectionY;
+    private short selectionWidth;
+    private short selectionHeight;
     private SelectionListener listener;
 
 
@@ -87,10 +87,10 @@ public class ImageSelector extends JPanel {
         int x2 = currentPoint.x;
         int y2 = currentPoint.y;
 
-        selectionX = Math.min(x1, x2);
-        selectionY = Math.min(y1, y2);
-        selectionWidth = Math.abs(x1 - x2);
-        selectionHeight = Math.abs(y1 - y2);
+        selectionX = (short) Math.min(x1, x2);
+        selectionY = (short) Math.min(y1, y2);
+        selectionWidth = (short) Math.abs(x1 - x2);
+        selectionHeight = (short) Math.abs(y1 - y2);
 
         //Notify our listener that a new selection has been made and save
         // it to our list of selections as rectangle objects
