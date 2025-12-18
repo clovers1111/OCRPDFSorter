@@ -5,9 +5,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import static java.util.Arrays.stream;
 
 public class LinkedFileHandler {
     private List<FileWrapper> fileWrappers;
@@ -130,8 +139,31 @@ public class LinkedFileHandler {
     }
 
 
+    public void makePdfFromFileWrappers() throws IOException {
+        PDDocument workingDocument = new PDDocument();
+        for (FileWrapper fileWrappers : fileWrappers){
+            PDPage page = new PDPage();
+            workingDocument.addPage(page);
 
-    private void pushUnsortedFileWrappers(){
+            String imgPath = fileWrappers.getPdfImgFile().getAbsolutePath();
+
+            PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath, workingDocument);
+
+            try (PDPageContentStream contents = new PDPageContentStream(workingDocument, page)) {
+                contents.drawImage(pdImage,
+                        0, 0,
+                        page.getMediaBox().getWidth(),
+                        page.getMediaBox().getHeight());
+            };
+        }
+        String sortedPdfString = DataManager.pathToPdfFile
+                .toString()
+                .substring(0, DataManager.pathToPdfFile.toString().length()-4)
+                + "_sorted.pdf";
+
+
+        workingDocument.save(sortedPdfString);
+        workingDocument.close();
 
     }
 

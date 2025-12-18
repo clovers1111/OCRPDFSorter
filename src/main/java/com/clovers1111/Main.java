@@ -5,22 +5,13 @@ import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.nio.file.Files;
-
-
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-
 import javax.imageio.ImageIO;
 
 //
@@ -106,12 +97,18 @@ public class Main {
 
 
         /*
-        * FileWrapper objects now have all the necessary info to commence sorting;
-        * we will use quicksort.
-         */
+        * FileWrapper objects now have all the necessary info to commence sorting
+        */
+
         fileWrapperHandler.printFileWrappersAndLocation();
         fileWrapperHandler.sortFileWrappers();
         fileWrapperHandler.printFileWrappersAndLocation();
+
+        // All of the fileWrappers are sorted in the fileWrapperHandler;
+        // create now we need to compile all of the file wrappers into a pdf and save in pdf dir
+
+        fileWrapperHandler.makePdfFromFileWrappers();
+
 
 
 
