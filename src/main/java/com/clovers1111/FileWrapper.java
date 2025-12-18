@@ -5,7 +5,7 @@ import java.io.File;
 public class FileWrapper extends PdfToImageService implements Comparable<FileWrapper> {
     public FileWrapper(File file){
         this.pdfImgFile = file;
-        this.ocrInteger = 32000;
+        this.ocrInteger = 0;
     }
 
     public File getPdfImgFile(){

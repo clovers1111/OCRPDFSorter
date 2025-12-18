@@ -20,7 +20,15 @@ public class Main {
     public static void main( String[] args ) throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the path to the PDF file starting from root: ");
-        final String pdfString = scanner.nextLine();
+        String pdfString;
+        while (true){
+            pdfString = scanner.nextLine();
+            if ((new File(pdfString)).isFile()){
+                break;
+            }
+            System.out.println("The file location is invalid. Please try again: ");
+        }
+
         DataManager.pathToPdfFile = Paths.get(pdfString);
         DataManager.pathToPdfDir = DataManager.pathToPdfFile.getParent();
         DataManager.tempFileDir = (Files.createTempDirectory("pdfsort"));
@@ -96,41 +104,18 @@ public class Main {
         fileWrapperHandler.applyAttributesToFileWrappers();
 
 
-        /*
-        * FileWrapper objects now have all the necessary info to commence sorting
-        */
+        // FileWrapper objects now have all the necessary info to commence sorting
+
 
         fileWrapperHandler.printFileWrappersAndLocation();
         fileWrapperHandler.sortFileWrappers();
         fileWrapperHandler.printFileWrappersAndLocation();
 
         // All of the fileWrappers are sorted in the fileWrapperHandler;
-        // create now we need to compile all of the file wrappers into a pdf and save in pdf dir
+        // now we need to compile all of the file wrappers into a pdf and save in pdf dir
 
         fileWrapperHandler.makePdfFromFileWrappers();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        String filePath = "/home/harry/Documents/Scans/STA381/test/Selection_162.png";
-            String text;
-            System.out.println("OCR");
-            OcrParserTesseractService ocr = new OcrParserTesseractService();
-            text = ocr.parse(filePath);
-
-        System.out.println(text);
-         */
     }
 }

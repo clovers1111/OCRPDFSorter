@@ -9,14 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-import static java.util.Arrays.stream;
 
 public class LinkedFileHandler {
     private List<FileWrapper> fileWrappers;
@@ -45,7 +42,8 @@ public class LinkedFileHandler {
 
     //Data needs to be saved to a file each time this is complete to pass info from ImageSelector
     // back to this class.
-    public void setSelections(){
+
+    public void setSelections(){            //Eventually update to integrate class func. into UI
 
             File imageFile = getRandomImgFile();
 
@@ -171,13 +169,4 @@ public class LinkedFileHandler {
         this.selections.add(rectangle);
     }
 
-    /*
-    private void setDirectoryLocation(){
-        String[] splitDir = fileWrappers.get(0).getPdfImgFile().getAbsolutePath().split("/");
-        for (int i = 0; i < splitDir.length - 1; i++){  //creates </path/to/temp/dir>
-            this.tempFileDir += "/" + splitDir[i];
-        }
-        this.tempFileDir += tempFileDir + "/";          //creates </path/to/temp/dir/>
-    }
-     */
 }

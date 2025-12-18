@@ -1,6 +1,5 @@
 package com.clovers1111;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import net.sourceforge.tess4j.Tesseract;
 
 public class OcrParserTesseractService {
