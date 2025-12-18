@@ -2,7 +2,7 @@ package com.clovers1111;
 
 import java.io.File;
 
-public class FileWrapper extends PdfToImageService implements Comparable<FileWrapper> {
+public class FileWrapper implements Comparable<FileWrapper> {
     public FileWrapper(File file){
         this.pdfImgFile = file;
         this.ocrInteger = 0;
