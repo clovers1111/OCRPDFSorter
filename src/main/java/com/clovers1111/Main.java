@@ -19,16 +19,16 @@ import javax.imageio.ImageIO;
 public class Main {
     public static void main( String[] args ) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the path to the PDF file starting from root: ");
-        String pdfString;
-        while (true){
+        //System.out.print("Enter the path to the PDF file starting from root: ");
+        String pdfString = "/home/harry/Documents/Scans/EE280/EXAM2_copy.pdf";
+        /*(while (true){
             pdfString = scanner.nextLine();
             if ((new File(pdfString)).isFile()){
                 break;
             }
             System.out.println("The file location is invalid. Please try again: ");
         }
-
+        */
         DataManager.pathToPdfFile = Paths.get(pdfString);
         DataManager.pathToPdfDir = DataManager.pathToPdfFile.getParent();
         DataManager.tempFileDir = (Files.createTempDirectory("pdfsort"));

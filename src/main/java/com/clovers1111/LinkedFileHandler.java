@@ -3,6 +3,8 @@ package com.clovers1111;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,24 +49,32 @@ public class LinkedFileHandler {
 
             File imageFile = getRandomImgFile();
 
-
-
             // Creates new JFrame object based on random file on previous line.
             SwingUtilities.invokeLater(() -> {
-                JFrame frame = new JFrame("Image Region Selector");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+                JFrame mainPanel = new JFrame("Image Region Selector");
+                mainPanel.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 ImageSelector selector = new ImageSelector(imageFile);
-
+                mainPanel.setLayout(new BorderLayout());
                 // Our listener will pass through the rectangle objects from ImageSelector to our present class
-                selector.setSelectionListener(this::addSelections);
+                selector.confirmSelectionListener(this::addSelections); //calls this method with rectangle parameter
+
+
 
                 JScrollPane scrollPane = new JScrollPane(selector);
-                frame.add(scrollPane);
+                JButton confirmButton = new JButton("Confirm selection");
+                mainPanel.add(confirmButton, BorderLayout.NORTH);
+                confirmButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        selector.notifySelection();
+                    }
 
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
+                });
+                mainPanel.getContentPane().add(scrollPane);
+
+
+                mainPanel.pack();
+                mainPanel.setLocationRelativeTo(null);
+                mainPanel.setVisible(true);
 
             });
 
@@ -165,7 +175,7 @@ public class LinkedFileHandler {
 
     }
 
-    private void addSelections(Rectangle rectangle) {
+    public void addSelections(Rectangle rectangle) {
         this.selections.add(rectangle);
     }
 

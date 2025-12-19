@@ -66,22 +66,23 @@ public class ImageSelector extends JPanel {
         this.addMouseMotionListener(mouseHandler);
     }
 
-    // Calculates the final top-left x/y and width/height
-    // Handles dragging in any direction (e.g., bottom-right to top-left)
 
-    public void setSelectionListener(SelectionListener listener){
-        this.listener = listener;
+    public void confirmSelectionListener(SelectionListener listener){
+        this.listener = listener; //Listener is implemented into class
     }
 
 
 
-    private void notifySelection(Rectangle r) {
+
+
+    //After clicking "confirm selection", the selection is saved by calling this method.
+    public void notifySelection() {
         if (listener != null) {
-            listener.selectionChanged(r);
+            listener.selectionChanged(new Rectangle(selectionX, selectionY, selectionWidth, selectionHeight));                   // Sends rectangle back to listener
         }
     }
 
-    private void calculateSelection() {
+    public void calculateSelection() {
         int x1 = startPoint.x;
         int y1 = startPoint.y;
         int x2 = currentPoint.x;
@@ -92,9 +93,7 @@ public class ImageSelector extends JPanel {
         selectionWidth = (short) Math.abs(x1 - x2);
         selectionHeight = (short) Math.abs(y1 - y2);
 
-        //Notify our listener that a new selection has been made and save
-        // it to our list of selections as rectangle objects
-        notifySelection(new Rectangle(selectionX, selectionY, selectionWidth, selectionHeight));
+
     }
 
     @Override
