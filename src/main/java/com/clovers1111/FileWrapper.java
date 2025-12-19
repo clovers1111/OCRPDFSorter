@@ -5,7 +5,7 @@ import java.io.File;
 public class FileWrapper implements Comparable<FileWrapper> {
     public FileWrapper(File file){
         this.pdfImgFile = file;
-        this.ocrInteger = 0;
+        this.ocrInteger = -1;
     }
 
     public File getPdfImgFile(){

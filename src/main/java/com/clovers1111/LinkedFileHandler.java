@@ -21,7 +21,7 @@ public class LinkedFileHandler {
     private List<FileWrapper> fileWrappers;
     private List<Rectangle> selections;
     private String tempFileDir;
-    private List<FileWrapper> unlabledFileWrappers;
+    private List<FileWrapper> unlabeledFileWrappers;
 
     public LinkedFileHandler(){
         this.fileWrappers = new ArrayList<>();
@@ -32,7 +32,7 @@ public class LinkedFileHandler {
         this.fileWrappers.add(fileWrapper);
     }
 
-    public File getRandomImgFile(){
+    public File getRandomImgFile(List<FileWrapper> fileWrappers){
         int randInt = (int)(Math.random() * (fileWrappers.size()));
         return fileWrappers.get(randInt).getPdfImgFile();
     }
@@ -41,13 +41,38 @@ public class LinkedFileHandler {
         return this.fileWrappers;
     }
 
+    public List<FileWrapper> getUnlabeledFileWrappers(){
+        return this.unlabeledFileWrappers;
+    }
+
+    public void setSelections(){
+        setSelections(this.fileWrappers);
+    }
+
+    public void setSelectionsForUnlabeled(){
+        setSelections(this.unlabeledFileWrappers);
+    }
+
+    public void applyAttributesToUnlabeledFileWrappers() throws Exception {
+        applyAttributesToFileWrappers(this.unlabeledFileWrappers);
+    }
+
+
+    public void applyAttributesToFileWrappers() throws Exception {
+        applyAttributesToFileWrappers(this.fileWrappers);
+    }
+
 
     //Data needs to be saved to a file each time this is complete to pass info from ImageSelector
     // back to this class.
 
-    public void setSelections(){            //Eventually update to integrate class func. into UI
+    //Make helper functions
 
-            File imageFile = getRandomImgFile();
+
+
+    private void setSelections(List<FileWrapper> fileWrapper){            //Eventually update to integrate class func. into UI
+
+            File imageFile = getRandomImgFile(fileWrapper);
 
             // Creates new JFrame object based on random file on previous line.
             SwingUtilities.invokeLater(() -> {
@@ -81,14 +106,15 @@ public class LinkedFileHandler {
 
     }
 
-    public void applyAttributesToFileWrappers() throws Exception {
+    private void applyAttributesToFileWrappers(List<FileWrapper> fileWrappers) throws Exception {
 
         OcrParserTesseractService ocrParser = new OcrParserTesseractService();
 
         for (FileWrapper fileWrapper : fileWrappers) {
             //Convert the file to a buffered image - this conversion is preferred to reduce RAM usage.
             BufferedImage tempBim = ImageIO.read(fileWrapper.getPdfImgFile());
-            for (Rectangle rectangle : selections) {       // We'll crop the image and iterate through the user's selections
+            for (Rectangle rectangle : selections) // We'll crop the image and iterate through the user's selections
+            {
                 String tempOcrText = ocrParser.parse(
                         /* <--! IMPORTANT NOTE FOR LATER !-->
                         * If you extract a small subimage from a very large
@@ -111,6 +137,9 @@ public class LinkedFileHandler {
                     fileWrapper.setOcrInteger(Short
                             .parseShort(tempOcrText));
                     break;
+                }   // If OcrInteger = -1, ocr failed to rec. image, and we don't want to double dip
+                if (fileWrapper.getOcrInteger() == -1 && !unlabeledFileWrappers.contains(fileWrapper)){
+                    this.unlabeledFileWrappers.add(fileWrapper);
                 }
             };
 

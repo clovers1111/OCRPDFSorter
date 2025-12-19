@@ -103,6 +103,11 @@ public class Main {
         */
         fileWrapperHandler.applyAttributesToFileWrappers();
 
+        //If anything wasn't labeled, it'll have been added to the unlabeled file arraylist.
+        if (fileWrapperHandler.getUnlabeledFileWrappers().size() > 0){
+            fileWrapperHandler.setSelectionsForUnlabeled();
+        }
+
 
         // FileWrapper objects now have all the necessary info to commence sorting
 
