@@ -19,16 +19,16 @@ import javax.imageio.ImageIO;
 public class Main {
     public static void main( String[] args ) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        //System.out.print("Enter the path to the PDF file starting from root: ");
-        String pdfString = "/home/harry/Documents/Scans/EE280/EXAM2_copy.pdf";
-        /*(while (true){
+        System.out.print("Enter the path to the PDF file starting from root: ");
+        String pdfString;
+        while (true){
             pdfString = scanner.nextLine();
             if ((new File(pdfString)).isFile()){
                 break;
             }
             System.out.println("The file location is invalid. Please try again: ");
         }
-        */
+
         DataManager.pathToPdfFile = Paths.get(pdfString);
         DataManager.pathToPdfDir = DataManager.pathToPdfFile.getParent();
         DataManager.tempFileDir = (Files.createTempDirectory("pdfsort"));
@@ -103,9 +103,31 @@ public class Main {
         */
         fileWrapperHandler.applyAttributesToFileWrappers();
 
-        //If anything wasn't labeled, it'll have been added to the unlabeled file arraylist.
-        if (fileWrapperHandler.getUnlabeledFileWrappers().size() > 0){
-            fileWrapperHandler.setSelectionsForUnlabeled();
+        //If anything wasn't labeled, it'll have been added to the unlabeled file arraylist. (Note: make this into a member function for fileWrapperHandler)
+        if (!fileWrapperHandler.getUnlabeledFileWrappers().isEmpty()){
+            do{
+                fileWrapperHandler.setSelectionsForUnlabeled();;
+                System.out.println("Are you finished selecting? (y/n): ");
+                if (scanner.nextLine().equals("n"))
+                    continue;
+                else {
+
+                    System.out.print("Your selections: ");
+                    for (Rectangle rectangle : fileWrapperHandler.getSelections()){
+                        System.out.print(rectangle + ", ");
+                    }
+
+                    System.out.println("\nRetry? (y/n): ");
+                    if (scanner.nextLine().equals("y")){
+                        fileWrapperHandler.clearSelections();
+                    }
+                    else {          //exit, finally
+                        break;
+                    }
+
+                }
+
+            }while(true);
         }
 
 

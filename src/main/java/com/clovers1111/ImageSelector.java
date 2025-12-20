@@ -56,8 +56,6 @@ public class ImageSelector extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 isSelecting = false;
                 calculateSelection(); // Finalize the coordinates
-                System.out.println("Selection Saved: [X=" + selectionX + ", Y=" + selectionY +
-                        ", W=" + selectionWidth + ", H=" + selectionHeight + "]");
                 repaint();
             }
         };
@@ -78,7 +76,9 @@ public class ImageSelector extends JPanel {
     //After clicking "confirm selection", the selection is saved by calling this method.
     public void notifySelection() {
         if (listener != null) {
-            listener.selectionChanged(new Rectangle(selectionX, selectionY, selectionWidth, selectionHeight));                   // Sends rectangle back to listener
+            listener.selectionChanged(new Rectangle(selectionX, selectionY, selectionWidth, selectionHeight));
+            System.out.println("Selection Saved: [X=" + selectionX + ", Y=" + selectionY +
+                    ", W=" + selectionWidth + ", H=" + selectionHeight + "]");// Sends rectangle back to listener
         }
     }
 

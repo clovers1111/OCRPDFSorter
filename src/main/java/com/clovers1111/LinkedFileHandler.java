@@ -26,6 +26,7 @@ public class LinkedFileHandler {
     public LinkedFileHandler(){
         this.fileWrappers = new ArrayList<>();
         this.selections = new ArrayList<>();
+        this.unlabeledFileWrappers = new ArrayList<>();
     }
 
     public void add(FileWrapper fileWrapper){
@@ -144,7 +145,8 @@ public class LinkedFileHandler {
             };
 
         }
-
+        //We're done with these selections
+        clearSelections();
     }
 
     public void sortFileWrappers(){
