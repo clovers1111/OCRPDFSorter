@@ -26,7 +26,7 @@ public class LinkedFileHandler {
     public LinkedFileHandler(){
         this.fileWrappers = new ArrayList<>();
         this.selections = new ArrayList<>();
-        this.unlabeledFileWrappers = new ArrayList<>();
+        this.unlabeledFileWrappers = new ArrayList<>();     //refactor for this to be a new class
     }
 
     public void add(FileWrapper fileWrapper){
@@ -117,21 +117,15 @@ public class LinkedFileHandler {
             for (Rectangle rectangle : selections) // We'll crop the image and iterate through the user's selections
             {
                 String tempOcrText = ocrParser.parse(
-                        /* <--! IMPORTANT NOTE FOR LATER !-->
-                        * If you extract a small subimage from a very large
-                        * original image, the entire large image's data remains
-                        * in memory as long as the subimage reference is held.
-                         */
                         tempBim.getSubimage(               // Image crop
                             rectangle.x,
                             rectangle.y,
                             rectangle.width,
-                            rectangle.height)
-                        ).chars()                                   // Stream the input
+                            rectangle.height
+                        )).chars()                                   // Stream the input
                         .filter(c -> Character.isDigit(c))      // and throw away non-digits
                         .mapToObj(c -> String.valueOf((char) c))
-                        .collect(Collectors.joining()
-                        );
+                        .collect(Collectors.joining());
                 //This will never run if our OCR service never reads a number;
                 // this is intentional because the ocrInteger is init. to null
                 if (!tempOcrText.isBlank()){

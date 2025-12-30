@@ -56,10 +56,10 @@ public class Main {
         while(pdfIterator.hasNext()){
             PDFRenderer pdfRenderer = new PDFRenderer(pdfIterator.next());
             BufferedImage bim = pdfRenderer.renderImageWithDPI(0,120, ImageType.RGB);              // Creates a buffered image for later saving
-            String tempImgName = DataManager.tempFileDir + "/temp_img" + count++ + ".jpg";                        // produces a string to specify file saving location
+            String tempImgName = DataManager.tempFileDir + "/temp_img" + count++ + ".png";                        // produces a string to specify file saving location
             File tempImgFile = new File(tempImgName);                                                            // and a file object to store
             tempImgFile.createNewFile();
-            ImageIO.write(bim, "JPG", tempImgFile);                                                     // Writes data to blank file
+            ImageIO.write(bim, "PNG", tempImgFile);                                                     // Writes data to blank file
 
 
             fileWrapperHandler.add(new FileWrapper(tempImgFile));                //  fileWrapper obj. created; contains prev. file
