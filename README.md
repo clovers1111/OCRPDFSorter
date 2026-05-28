@@ -1,3 +1,5 @@
+(README written by AI)
+
 A personal Java utility designed to reorder scrambled PDF files automatically. This program uses optical character recognition to identify page numbers within a document and reassemble the pages in the correct numerical order.
 
 # 💡 Overview
